@@ -66,6 +66,9 @@
             # Python environment with native Nix packages
             pythonEnv
 
+            # Python package manager
+            uv
+
             # Ollama for local LLM
             ollama
 
@@ -97,12 +100,16 @@
             echo "AISHE Development Environment Loaded"
             echo "========================================"
             echo "Python: $(python --version)"
+            echo "uv: $(uv --version)"
             echo "Ollama: $(ollama --version)"
             echo "Virtual environment: .venv"
             echo ""
             echo "Available commands:"
             echo "  nix run .#server  - Start the API server"
             echo "  nix run .#aishe   - Run the CLI client"
+            echo ""
+            echo "Workshop setup:"
+            echo "  cd workshop/session-X/python && uv sync"
             echo ""
             echo "To start Ollama service, run:"
             echo "  ollama serve"

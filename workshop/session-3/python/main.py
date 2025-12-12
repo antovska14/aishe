@@ -10,54 +10,11 @@ from dotenv import load_dotenv
 
 
 def get_from_cache(lang_cache: LangCache, question: str) -> dict | None:
-    """Search for a cached response using semantic search.
-
-    Args:
-        lang_cache: LangCache client instance
-        question: The question to search for
-
-    Returns:
-        Cached response data or None if not found
-    """
-    try:
-        # Search for semantically similar questions in the cache
-        # Use a lower similarity threshold (0.8) to allow for more semantic matches
-        result = lang_cache.search(prompt=question, similarity_threshold=0.8)
-
-        # Check if we got any results
-        if result and hasattr(result, 'data') and result.data:
-            # Get the first (most similar) entry
-            entry = result.data[0]
-
-            # Parse the cached response from the entry's response field
-            if hasattr(entry, 'response') and entry.response:
-                # The response is stored as a JSON string
-                cached_data = json.loads(entry.response)
-                return cached_data
-
-    except Exception as e:
-        print(f"Warning: Error reading from cache: {e}")
-
-    return None
+    return
 
 
 def save_to_cache(lang_cache: LangCache, question: str, response_data: dict) -> None:
-    """Save response to semantic cache.
-
-    Args:
-        lang_cache: LangCache client instance
-        question: The question
-        response_data: The response data to cache
-    """
-    try:
-        # Convert response data to JSON string for storage
-        response_json = json.dumps(response_data)
-
-        # Save to langcache with the question as prompt and response as JSON
-        lang_cache.set(prompt=question, response=response_json)
-
-    except Exception as e:
-        print(f"Warning: Error saving to cache: {e}")
+    return
 
 
 def main():
