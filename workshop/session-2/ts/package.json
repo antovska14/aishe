@@ -1,0 +1,18 @@
+{
+    "name": "@aishe/session-2",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "tsx --env-file .env starter.ts",
+        "solution": "tsx --env-file .env solution.ts"
+    },
+    "dependencies": {
+        "redis": "5.11.0"
+    },
+    "devDependencies": {
+        "@types/node": "25.2.3",
+        "tsx": "4.21.0",
+        "typescript": "5.9.3"
+    }
+}

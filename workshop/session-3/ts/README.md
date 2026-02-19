@@ -1,6 +1,6 @@
-# Session 3: Semantic Caching with LangCache - JavaScript Setup
+# Session 3: Semantic Caching with LangCache - TypeScript Setup
 
-This directory contains the JavaScript implementation for Session 3 of the AISHE workshop, which implements semantic caching using Redis LangCache.
+This directory contains the TypeScript implementation for Session 3 of the AISHE workshop, which implements semantic caching using Redis LangCache.
 
 ## Prerequisites
 
@@ -12,20 +12,21 @@ Before starting, ensure you have:
 
 ## Your Task
 
-- [ ] Implement the TODO comments inside the `getFromCache` and `saveToCache` functions in [starter.js](./starter.js)
+- [ ] Implement the TODO comments inside the `getFromCache` and `saveToCache` functions in [starter.ts](./starter.ts)
 
 ## Project Setup
 
 ### 1. Install Dependencies
 
 ```bash
-cd workshop/session-3/js
+cd workshop/session-3/ts
 npm install
 ```
 
 This will install:
 
 - `@redis-ai/langcache` - Semantic caching library for Redis
+- `tsx` - TypeScript execution engine
 
 ### 2. Configure Environment
 
@@ -48,7 +49,7 @@ LANGCACHE_SERVER_URL=https://aws-us-east-1.langcache.redis.io
 ## Running the CLI with Semantic Caching
 
 ```bash
-cd workshop/session-3/js
+cd workshop/session-3/ts
 npm run start
 # Input some question (e.g. "What is Redis?")
 ```
@@ -56,7 +57,7 @@ npm run start
 Reference solution:
 
 ```bash
-cd workshop/session-3/js
+cd workshop/session-3/ts
 npm run solution
 # Input some question (e.g. "What is Redis?")
 ```

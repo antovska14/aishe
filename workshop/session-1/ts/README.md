@@ -1,8 +1,8 @@
-# Session 1: Basic CLI Client - JavaScript Setup
+# Session 1: Basic CLI Client - TypeScript Setup
 
 ## Your Task
 
-- [ ] Implement the TODO comments inside the `main()` function in [starter.js](./starter.js)
+- [ ] Implement the TODO comments inside the `main()` function in [starter.ts](./starter.ts)
 
 ## Prerequisites
 
@@ -44,12 +44,13 @@ npm --version
 
 ## Project Setup
 
-### 1. Navigate to the project directory
+### 1. Install Dependencies
 
-Navigate to the project directory:
+Navigate to the project directory and install all dependencies:
 
 ```bash
-cd workshop/session-1/js
+cd workshop/session-1/ts
+npm install
 ```
 
 ### 2. Configure Environment
@@ -91,6 +92,15 @@ If `node` or `npm` is not found after installation:
    ```bash
    which node
    ```
+
+### Dependencies not installing
+
+Try removing node_modules and starting fresh:
+
+```bash
+rm -rf node_modules
+npm install
+```
 
 ### Local AISHE server doesn't start
 

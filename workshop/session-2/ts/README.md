@@ -1,4 +1,4 @@
-# Session 2: CLI with Redis Caching - JavaScript Setup
+# Session 2: CLI with Redis Caching - TypeScript Setup
 
 ## Prerequisites
 
@@ -13,20 +13,21 @@ Before starting, ensure you have:
 
 ## Your Task
 
-- [ ] Implement the TODO comments inside the `getCacheKey`, `getFromCache`, and `setToCache` functions in [starter.js](./starter.js)
+- [ ] Implement the TODO comments inside the `getCacheKey`, `getFromCache`, and `setToCache` functions in [starter.ts](./starter.ts)
 
 ## Project Setup
 
 ### Install Dependencies
 
 ```bash
-cd workshop/session-2/js
+cd workshop/session-2/ts
 npm install
 ```
 
 This will install:
 
 - `redis@5.11.0` - Redis client for Node.js
+- `tsx` - TypeScript execution engine
 
 ### Start Redis (if not already running)
 
