@@ -13,6 +13,22 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type QuestionRequestBody struct {
+	Question string `json:"question"`
+}
+
+type Source struct {
+	Number int    `json:"number"`
+	Title  string `json:"title"`
+	URL    string `json:"url"`
+}
+
+type QuestionResponseBody struct {
+	Answer         string   `json:"answer"`
+	Sources        []Source `json:"sources"`
+	ProcessingTime float64  `json:"processing_time"`
+}
+
 func main() {
 	// Hints:
 	// 1. Define structs to represent the API request and response
@@ -30,8 +46,8 @@ func main() {
 
 	// Check if question was provided
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run . <your question>")
-		fmt.Println("Example: go run . 'What is the capital of France?'")
+		fmt.Println("Usage: go run main.go <your question>")
+		fmt.Println("Example: go run main.go 'What is the capital of France?'")
 		os.Exit(1)
 	}
 
