@@ -73,7 +73,7 @@ func main() {
 	url := os.Getenv("AISHE_URL")
 
 	httpClient := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 
 	req, err := http.NewRequest("POST", url+"/api/v1/ask", bytes.NewBuffer(jsonRequestBody))
