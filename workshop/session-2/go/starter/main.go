@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -41,7 +43,9 @@ type Response struct {
 // 2. Hash the normalized question for consistent key generation
 // 3. Add a namespace prefix to the key
 func getCacheKey(question string) string {
-	panic("not implemented")
+	normalizedQuestion := strings.ToLower(strings.TrimSpace(question))
+	hash := sha256.Sum256([]byte(normalizedQuestion))
+	return "aishe:question:" + hex.EncodeToString(hash[:])
 }
 
 // getFromCache retrieves cached response for a question
@@ -52,7 +56,20 @@ func getCacheKey(question string) string {
 // 3. Handle cache miss vs. other errors appropriately
 // 4. Parse and return the cached JSON response
 func getFromCache(client *redis.Client, question string) (*Response, error) {
-	panic("not implemented")
+	cacheKey := getCacheKey(question)
+
+	ctx := context.Background()
+	cachedData, err := client.Get(ctx, cacheKey).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	var response Response
+	if err := json.Unmarshal([]byte(cachedData), &response); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }
 
 // saveToCache saves response to cache
@@ -63,7 +80,14 @@ func getFromCache(client *redis.Client, question string) (*Response, error) {
 // 3. Save to Redis with an appropriate expiration time
 // 4. Handle any errors from the operation
 func saveToCache(client *redis.Client, question string, response *Response) error {
-	panic("not implemented")
+	cacheKey := getCacheKey(question)
+	jsonData, err := json.Marshal(response)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+	return client.Set(ctx, cacheKey, jsonData, 24*time.Hour).Err()
 }
 
 func main() {
