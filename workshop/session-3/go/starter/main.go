@@ -41,10 +41,34 @@ type CachedResponse struct {
 
 // LangCacheClient represents a client for LangCache semantic caching
 type LangCacheClient struct {
-	ServerURL string
-	CacheID   string
-	APIKey    string
+	ServerURL  string
+	CacheID    string
+	APIKey     string
 	HTTPClient *http.Client
+}
+
+// LangCacheSearchRequest represents a search request to LangCache
+type LangCacheSearchRequest struct {
+	Prompt              string  `json:"prompt"`
+	SimilarityThreshold float64 `json:"similarity_threshold"`
+}
+
+// LangCacheSearchEntry represents a single search result entry
+type LangCacheSearchEntry struct {
+	Prompt     string   `json:"prompt"`
+	Response   string   `json:"response"`
+	Similarity *float64 `json:"similarity,omitempty"` // Optional similarity score
+}
+
+// LangCacheSearchResponse represents the search response from LangCache
+type LangCacheSearchResponse struct {
+	Data []LangCacheSearchEntry `json:"data"`
+}
+
+// LangCacheSetRequest represents a set request to LangCache
+type LangCacheSetRequest struct {
+	Prompt   string `json:"prompt"`
+	Response string `json:"response"`
 }
 
 // NewLangCacheClient creates a new LangCache client
@@ -69,7 +93,52 @@ func NewLangCacheClient(serverURL, cacheID, apiKey string) *LangCacheClient {
 // 5. If a match is found, unmarshal the cached data and return it with similarity info
 // 6. Return nil if no matches found (cache miss)
 func getFromCache(client *LangCacheClient, question string, threshold float64) (*CachedResponse, error) {
-	panic("not implemented")
+	searchReq := LangCacheSearchRequest{
+		Prompt:              question,
+		SimilarityThreshold: threshold,
+	}
+
+	jsonData, err := json.Marshal(searchReq)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("%s/v1/caches/%s/entries/search", client.ServerURL, client.CacheID)
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+client.APIKey)
+
+	resp, err := client.HTTPClient.Do(req)
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("search failed with status %d", resp.StatusCode)
+	}
+
+	var searchResp LangCacheSearchResponse
+	if err := json.NewDecoder(resp.Body).Decode(&searchResp); err != nil {
+		return nil, err
+	}
+
+	if len(searchResp.Data) == 0 {
+		return nil, nil // No cache hit
+	}
+
+	entry := searchResp.Data[0]
+
+	var cachedData Response
+	if err := json.Unmarshal([]byte(entry.Response), &cachedData); err != nil {
+		return nil, err
+	}
+
+	return &CachedResponse{
+		Response:   &cachedData,
+		Similarity: entry.Similarity,
+	}, nil
 }
 
 // saveToCache saves response to semantic cache
@@ -81,7 +150,41 @@ func getFromCache(client *LangCacheClient, question string, threshold float64) (
 // 4. Include proper authentication headers
 // 5. Verify the operation succeeded
 func saveToCache(client *LangCacheClient, question string, response *Response) error {
-	panic("not implemented")
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		return err
+	}
+
+	setReq := LangCacheSetRequest{
+		Prompt:   question,
+		Response: string(responseJSON),
+	}
+
+	jsonData, err := json.Marshal(setReq)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("%s/v1/caches/%s/entries", client.ServerURL, client.CacheID)
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+client.APIKey)
+
+	resp, err := client.HTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("set failed with status %d", resp.StatusCode)
+	}
+
+	return nil
 }
 
 func main() {
@@ -261,4 +364,3 @@ func main() {
 	fmt.Printf("Execution time: %.2f seconds\n", executionTime)
 	fmt.Println(strings.Repeat("=", 70))
 }
-
